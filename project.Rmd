@@ -1,0 +1,63 @@
+---
+title: "Motor Trend Report"
+author: "HPSUN"
+date: "2017年12月3日"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Excutive Summary
+For this analysis, We are using the mtcar dataset for analysis.For details of this dataset, your can see this link:   https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html  
+We used linear regression model to evaluate the factor affact miles per gallon(mpg). And found that mpg prediction mainly depends on wt,cyl,disp of the car. The manual transmission may increase mpg a little (0.14), but it is not significant.So it's hard to say that auto transmission is better or not.
+
+## Data Exploratory
+```{r}
+library(ggplot2)
+data("mtcars")
+#summary(mtcars)
+m <- mtcars
+m$cyl <- as.factor(m$cyl)
+m$vs <- as.factor(m$vs)
+m$am <- as.factor(m$am)
+m$gear <- as.factor(m$gear)
+m$carb <- as.factor(m$carb)
+```
+
+## Regression Model
+From figure 1, It seems all the features are correlated to mpg. So, first, we add all features for regression model.
+```{r}
+fit1 <- lm(mpg~.,data=m)
+anova(fit1)
+```
+From this model, we found cyl, disp, wt are signifcant variables have effect on mpg.So next, we use only disp, wt, cyl and am to predict mpg.
+```{r}
+fit2 <- lm(mpg~disp+wt+cyl+am,data=m)
+summary(fit2)
+```
+This model explains 83.76% of the variance. From this we see the manual transmisson increase 0.141212 mpg,but it's not significant.The most important factors affect mpg is still cyl and wt.
+
+## Appendix
+### Figure 1: Exploratory plot
+```{r,fig.width=10,fig.height=10}
+par(mfrow = c(3,4))
+plot(mpg~.,data=m)
+```
+
+### Figure 2 : fit1 Diagnostic
+```{r}
+par(mfrow = c(2, 2))
+plot(fit1)
+```
+
+### Figure 3 : fit2 Diagnostic
+```{r}
+par(mfrow = c(2, 2))
+plot(fit2)
+```
+
+
+
+
